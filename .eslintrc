@@ -1,4 +1,7 @@
 {
+  "parserOptions": {
+    "sourceType": "module"
+  },
   "extends": [
     "eslint:recommended"
   ],
@@ -24,7 +27,7 @@
     "func-call-spacing": ["error", "never"],
     "indent": ["warn", 2, {"SwitchCase": 1}],
     "keyword-spacing": ["error", { "before": true, "after": true }],
-    "max-len": ["warn", 100],
+    "max-len": ["warn", 120],
     "no-duplicate-imports": "error",
     "id-length": "error",
     "id-blacklist": ["error", "e", "cb", "callback", "payload", "obj", "arr"],

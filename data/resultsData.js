@@ -52,6 +52,6 @@ const resultsData = [
   { event_id: 1, division_id: 8, rider_id: 51, run_1: 'no data', run_2: 'no data', run_3: 'no data', final: '27'},
   { event_id: 1, division_id: 8, rider_id: 52, run_1: 'no data', run_2: 'no data', run_3: 'no data', final: '28'},
   { event_id: 1, division_id: 8, rider_id: 53, run_1: 'no data', run_2: 'no data', run_3: 'no data', final: '29'}
-]
+];
 
-export default resultsData;
+module.exports = resultsData;

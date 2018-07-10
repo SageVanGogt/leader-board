@@ -52,6 +52,6 @@ const riders = [
   { id: 51, name: 'Elias ALLENSPACH', gender: 'mens', img: 'https://stillimg.olympic.org/flags/1x1/340x340/sui.png?interpolation=lanczos-none&resize=45:45, https://stillimg.olympic.org/flags/1x1/340x340/sui.png?interpolation=lanczos-none&resize=90:90 2x', country: 'SUI' },
   { id: 52, name: 'Janne KORPI', gender: 'mens', img: 'https://stillimg.olympic.org/flags/1x1/340x340/fin.png?interpolation=lanczos-none&resize=45:45, https://stillimg.olympic.org/flags/1x1/340x340/fin.png?interpolation=lanczos-none&resize=90:90 2x', country: 'FIN' },
   { id: 53, name: 'Wancheng SHI', gender: 'mens', img: 'https://stillimg.olympic.org/flags/1x1/340x340/chn.png?interpolation=lanczos-none&resize=45:45, https://stillimg.olympic.org/flags/1x1/340x340/chn.png?interpolation=lanczos-none&resize=90:90 2x', country: 'CHN' },
-]
+];
 
-export default riders;
+module.exports = riders;
