@@ -4,6 +4,8 @@ exports.up = function (knex, Promise) {
     knex.schema.createTable('events', function (table) {
       table.increments('id')
       table.string('name')
+      table.string('year')
+      table.string('location')
     }),
     knex.schema.createTable('riders', function (table) {
       table.increments('id')
@@ -14,11 +16,9 @@ exports.up = function (knex, Promise) {
     }),
     knex.schema.createTable('divisions', function (table) {
       table.increments('id')
-      table.integer('event_id').unsigned()
-      table.foreign('event_id')
-        .references('events.id');
       table.string('title')
       table.string('gender')
+      table.string('sport')
     }),
     knex.schema.createTable('results', function (table) {
       table.increments('id');
