@@ -1,4 +1,4 @@
-const resultsData = require('./resultsData');
+const resultsData = require('../../../data/resultsData');
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
