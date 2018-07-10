@@ -1,0 +1,13 @@
+language: node_js
+node_js: 9.4.0
+services: postgresql
+before_script:
+- psql -c 'CREATE DATABASE leaderboard;' -U postgres
+notifications:
+  email: false
+# deploy:
+#   provider: heroku
+#   api_key:
+#     secure: J2pmvACftdvcp+L9w0PpOAspVdO9hKz9ciZcxMDLrENFCdL/FzMCNA1HDfLTX/dXSo+ecSt1XfD1YS0oMXWVx0wZvzNPjw7cQB2KoPPjt6I26LXRWdRr2ZZhxmFdbTlvSJ95jr6KjP6wFblGKmluVGBxEnMskEIHM9PeWQFZ+tdvDTJsSvAli7SoyCdQprOlCpasIFdrJGR5V6QItP52uSLtDTvGyvt7jLBMUDbqYM54I+MnfX9H9r19uYN6aqWvME16LOtlzyjNxKAlg28A1wNDK4HZjT65jj5NY8L8sXaCzB83HXOLaI30Nn28Ntn+ZANvE9XLuM0Wp1IkZQBHY5CVb9WjUFzam3/pWqt1nhIQLth67ovBDysNqNhDCCQfAaeqf2wvxWxDxZVJA94ZQa2PyJ5LmxGNUUlmDL80ksKUMTKJkGmIQE6RpvQHrjCC22M9XHL7Q1AbUPowSyGXY7PG9fqETRpdf3c1v59cY6Q+XASHJRmyiG2Af6dGxs87plUU3Dr9Ew1Ekwf0zDCPk+IL2QkjfZsazxklBqoPjmlxR5IP1z0piiYCXGSbHIrsvpAF8jcsjSHzgyVqzGKFgHj2dQuXYQDohmtvVfbDXmZgiHGwNcew+bhQ/KpBrHdvaxbszF4MsU/6cVJWfLHYOEmHsS5X2DqZILUTbmp5hM4=
+#   app: nose-picker
+#   skip_cleanup: true
