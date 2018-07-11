@@ -42,12 +42,14 @@ const checkAdmin = (request, response, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, secretKey);
-      const admin = decoded.jwtid;
-      const appName = decoded.appName
+      const admin = decoded.jti;
+      const appName = decoded.appName;
       if (admin && appName === 'What?') {
         next();
-      } else {
+      } else if (admin && appName !== 'What?'){
         response.status(403).send('Invalid application.');
+      } else if (!admin) {
+        response.status(403).send('You must be an admin to access this endpoint')
       }
     } catch (err) {
       response.status(403).send('Invalid token.');
