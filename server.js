@@ -15,6 +15,19 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/api/v1/events', (request, response) => {
+  return database('events').select()
+    .then(events => {
+      return response.status(200).json({
+        status: 'success',
+        events
+      });
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.post('/api/v1/results', (request, response) => {
   const {
     event_id,
