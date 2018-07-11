@@ -14,7 +14,7 @@ exports.seed = function(knex, Promise) {
         {id: 7, gender: 'mens', title: 'Slopestyle', sport: 'Snowboarding'},
         {id: 8, gender: 'mens', title: 'Halfpipe', sport: 'Snowboarding'},
         {id: 9, gender: 'mens', title: 'Snowboard Cross', sport: 'Snowboarding'},
-        {id: 10, gender: 'mens', title: 'Parallel Giant Slalom', sport: 'Snowboarding'},
+        {id: 10, gender: 'mens', title: 'Parallel Giant Slalom', sport: 'Snowboarding'}
       ]);
     });
 };
