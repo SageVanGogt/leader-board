@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+const jwt = require('jsonwebtoken');
 app.set('port', process.env.PORT || 3000);
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin", "*");
@@ -14,6 +16,25 @@ app.use(function (request, response, next) {
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const checkAuth = (request, response, next) => {
+  const { token } = request.body;
+  const secretKey = process.env.SECRET_KEY;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, secretKey);
+      if (decoded.appName === 'What?') {
+        next();
+      } else {
+        response.status(403).send('Invalid application.');
+      }
+    } catch (err) {
+      response.status(403).send('Invalid token.');
+    }
+  } else {
+    response.status(403).send('You must be authorized to hit this endpoint.');
+  }
+};
 
 app.get('/api/v1/events', (request, response) => {
   return database('events').select()
