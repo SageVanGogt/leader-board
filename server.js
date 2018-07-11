@@ -137,8 +137,25 @@ app.delete('/api/v1/media/:id', (request, response) => {
   })
     .del()
     .then(() => {
-      response.status(200).send(`Success! media id #${mediaId} had been removed.`)
+      response.status(200).send(`Success! media id #${mediaId} had been removed.`);
     })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.delete('/api/v1/results/:id', (request, response) => {
+  const resultId = request.params.id;
+  database('results').where({
+    id: resultId
+  })
+    .del()
+    .then(() => {
+      response.status(200).send(`Success! media id #${resultId} had been removed.`);
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
 });
 
 app.listen(app.get('port'), () => {
