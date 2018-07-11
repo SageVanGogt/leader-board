@@ -41,6 +41,22 @@ app.get('/api/v1/riders', (request, response) => {
     });
 });
 
+app.get('/api/v1/riders/:id/results', (request, response) => {
+  const riderId = request.params.id;
+  return database('results').where({
+    rider_id: riderId
+  }).select()
+    .then(results => {
+      return response.status(200).json({
+        status: 'success',
+        results
+      });
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.post('/api/v1/results', (request, response) => {
   const {
     event_id,
