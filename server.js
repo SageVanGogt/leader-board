@@ -43,8 +43,33 @@ app.post('/api/v1/results', (request, response) => {
     .catch(error => {
       response.status(500).json({ error });
     });
-  
 });
+
+app.post('/api/v1/media', (request, response) => {
+  const {
+    event_id,
+    division_id,
+    rider_id,
+    result_id,
+    media_url } = request.body;
+
+  database('results').insert({
+    event_id,
+    division_id,
+    rider_id,
+    result_id,
+    media_url
+  }, 'id')
+    .then(resultId => {
+      response.status(201).json({
+        message: 'Success! Your result has been added.',
+        resultId: resultId[0]
+      });
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+  });
 
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
