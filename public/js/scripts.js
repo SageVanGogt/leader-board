@@ -19,9 +19,18 @@ async function getToken(event) {
   })
   const token = await response.json()
   clearInputs();
+  showToken(token);
 }
 
 function clearInputs() {
   $app.val('')
   $email.val('')
+  $email.focus();
+}
+
+function showToken(token) {
+  const tokenText = JSON.stringify(token)
+  const tokenDiv = $('.token')
+  tokenDiv.text(tokenText)
+  tokenDiv.toggleClass('hidden')
 }
