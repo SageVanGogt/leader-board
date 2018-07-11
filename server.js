@@ -28,6 +28,19 @@ app.get('/api/v1/events', (request, response) => {
     });
 });
 
+app.get('/api/v1/riders', (request, response) => {
+  return database('riders').select()
+    .then(riders => {
+      return response.status(200).json({
+        status: 'success',
+        riders
+      });
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.post('/api/v1/results', (request, response) => {
   const {
     event_id,
