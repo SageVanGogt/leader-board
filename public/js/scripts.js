@@ -18,5 +18,10 @@ async function getToken(event) {
     body: JSON.stringify(data)
   })
   const token = await response.json()
-  console.log(token)
+  clearInputs();
+}
+
+function clearInputs() {
+  $app.val('')
+  $email.val('')
 }

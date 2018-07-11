@@ -32,6 +32,13 @@ button {
   font-size: 2rem;
 }
 
-.token {
+.hidden {
   display: none;
+}
+
+.token {
+  width: 50vw;
+  background-color: rgba(41, 41, 41, 0.8);
+  height: 100px;
+  color: #f6e200;
 }
