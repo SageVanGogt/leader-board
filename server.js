@@ -57,6 +57,23 @@ app.get('/api/v1/riders/:id/results', (request, response) => {
     });
 });
 
+app.get('/api/v1/events/:eventId/division/:divId/results', (request, response) => {
+  const { eventId, divId } = request.params;
+  return database('results').where({
+    event_id: eventId,
+    division_id: divId
+  }).select()
+    .then(results => {
+      return response.status(200).json({
+        status: 'success',
+        results
+      });
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.post('/api/v1/results', (request, response) => {
   const {
     event_id,
