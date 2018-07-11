@@ -36,6 +36,18 @@ const checkAuth = (request, response, next) => {
   }
 };
 
+app.post('/authenticate', (request, response) => {
+  const { email, appName } = request.body;
+  const authPayload = { email, appName };
+  const secretKey = process.env.SECRET_KEY;
+  if (email && appName) {
+    const token = jwt.sign(authPayload, secretKey, { expiresIn: '2 days' });
+    response.status(201).json({ token });
+  } else {
+    response.status(422).send('You need to include an email AND appName in the request body.');
+  }
+});
+
 app.get('/api/v1/events', (request, response) => {
   return database('events').select()
     .then(events => {
@@ -95,7 +107,7 @@ app.get('/api/v1/events/:eventId/division/:divId/results', (request, response) =
     });
 });
 
-app.post('/api/v1/results', (request, response) => {
+app.post('/api/v1/results', checkAuth, (request, response) => {
   const {
     event_id,
     division_id,
@@ -125,7 +137,7 @@ app.post('/api/v1/results', (request, response) => {
     });
 });
 
-app.post('/api/v1/media', (request, response) => {
+app.post('/api/v1/media', checkAuth, (request, response) => {
   const {
     event_id,
     division_id,
@@ -151,7 +163,7 @@ app.post('/api/v1/media', (request, response) => {
     });
 });
 
-app.delete('/api/v1/media/:id', (request, response) => {
+app.delete('/api/v1/media/:id', checkAuth, (request, response) => {
   const mediaId = request.params.id;
   database('media').where({
     id: mediaId
@@ -165,7 +177,7 @@ app.delete('/api/v1/media/:id', (request, response) => {
     });
 });
 
-app.delete('/api/v1/results/:id', (request, response) => {
+app.delete('/api/v1/results/:id', checkAuth, (request, response) => {
   const resultId = request.params.id;
   database('results').where({
     id: resultId
@@ -179,7 +191,7 @@ app.delete('/api/v1/results/:id', (request, response) => {
     });
 });
 
-app.patch('/api/v1/results/:id', (request, response) => {
+app.patch('/api/v1/results/:id', checkAuth, (request, response) => {
   const resultId = request.params.id;
   const updatedResult = request.body.result;
 
@@ -194,7 +206,7 @@ app.patch('/api/v1/results/:id', (request, response) => {
     });
 });
 
-app.patch('/api/v1/riders/:id', (request, response) => {
+app.patch('/api/v1/riders/:id', checkAuth, (request, response) => {
   const riderId = request.params.id;
   const updatedRider = request.body.rider;
 
