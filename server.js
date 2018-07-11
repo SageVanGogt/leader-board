@@ -173,6 +173,21 @@ app.patch('/api/v1/results/:id', (request, response) => {
     });
 });
 
+app.patch('/api/v1/riders/:id', (request, response) => {
+  const riderId = request.params.id;
+  const updatedRider = request.body.rider;
+
+  return database('results')
+    .where({ id: riderId })
+    .update(updatedRider)
+    .then(rider => {
+      response.status(203).json({
+        status: "success",
+        rider
+      });
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
 });
