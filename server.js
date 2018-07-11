@@ -158,6 +158,21 @@ app.delete('/api/v1/results/:id', (request, response) => {
     });
 });
 
+app.patch('/api/v1/results/:id', (request, response) => {
+  const resultId = request.params.id;
+  const updatedResult = request.body.result;
+
+  return database('results')
+    .where({ id: resultId })
+    .update(updatedResult)
+    .then(result => {
+      response.status(203).json({
+        status: "success",
+        result
+      });
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
 });
