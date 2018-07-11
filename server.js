@@ -49,7 +49,7 @@ const checkAdmin = (request, response, next) => {
       } else if (admin && appName !== 'What?'){
         response.status(403).send('Invalid application.');
       } else if (!admin) {
-        response.status(403).send('You must be an admin to access this endpoint')
+        response.status(403).send('You must be an admin to access this endpoint');
       }
     } catch (err) {
       response.status(403).send('Invalid token.');
