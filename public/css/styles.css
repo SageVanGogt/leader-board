@@ -1,0 +1,37 @@
+html {
+  box-sizing: border-box;
+  background: url(../assets/token.jpg) no-repeat center center fixed;
+  background-size: cover;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+input {
+  width: 50vw;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.75);
+  margin: 25px;
+  font-size: 2rem;
+  padding-left: 10px;
+}
+
+button {
+  width: 50vw;
+  height: 50px;
+  background-color: rgb(131, 226, 0);
+  margin: 25px;
+  border: 2px solid black;
+  color: #009200;
+  font-size: 2rem;
+}
+
+.token {
+  display: none;
+}
