@@ -130,6 +130,17 @@ app.post('/api/v1/media', (request, response) => {
     });
 });
 
+app.delete('/api/v1/media/:id', (request, response) => {
+  const mediaId = request.params.id;
+  database('media').where({
+    id: mediaId
+  })
+    .del()
+    .then(() => {
+      response.status(200).send(`Success! media id #${mediaId} had been removed.`)
+    })
+});
+
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
 });
