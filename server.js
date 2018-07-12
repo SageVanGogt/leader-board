@@ -70,9 +70,11 @@ app.post('/authenticate', (request, response) => {
     const token = admin === 'turing.io' ? 
       jwt.sign(authPayload, secretKey, { expiresIn: '2 days', jwtid: 'admin' }) : 
       jwt.sign(authPayload, secretKey, { expiresIn: '2 days' });
-    response.status(201).json({ token });
+    response.status(200).json({ token });
   } else {
-    response.status(422).send('You need to include an email AND appName in the request body.');
+    response.status(422).json({
+      message: 'You need to include an email AND appName in the request body.'
+    });
   }
 });
 
