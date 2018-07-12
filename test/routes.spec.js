@@ -206,4 +206,42 @@ describe('API routes', () => {
         });
     });
   });
+
+  describe('POST /api/v1/results', () => {
+    it('should create a new result', done => {
+      chai.request(server)
+        .post('/api/v1/results')
+        .send({
+          event_id:1,
+          division_id:3,
+          rider_id: 1,
+          run_1: "23",
+          run_2: "29",
+          run_3: "21",
+          final: "80"
+        })
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(201);
+          response.body.should.be.a('object');
+          response.body.should.have.property('status');
+          response.body.status.should.equal('Success! Your result has been added.');
+          response.body.should.have.property('resultId');
+          response.body.resultId.should.equal(54);
+          done();
+        });
+    });
+
+    it.skip('should not create a record if the post body is missing info', done => {
+      chai.request(server)
+        .post('/api/v1/projects')
+        .send({
+        })
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.error.should.equal('No project name has been provided');
+          done();
+        })
+    })
+  })
 });

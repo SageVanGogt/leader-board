@@ -37,12 +37,12 @@ const checkAuth = (request, response, next) => {
 };
 
 const checkAdmin = (request, response, next) => {
-  const { token } = request.body;
+  const token = request.headers.authorization;
   const secretKey = process.env.SECRET_KEY;
   if (token) {
     try {
       const decoded = jwt.verify(token, secretKey);
-      const admin = decoded.jti;
+      const admin = decoded.admin;
       const appName = decoded.appName;
       if (admin && appName === 'Leader Board') {
         next();
@@ -164,7 +164,7 @@ app.post('/api/v1/results', checkAdmin, (request, response) => {
   }, 'id')
     .then(resultId => {
       response.status(201).json({ 
-        message: 'Success! Your result has been added.',
+        status: 'Success! Your result has been added.',
         resultId: resultId[0] 
       });
     })
