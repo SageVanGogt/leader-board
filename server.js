@@ -42,7 +42,7 @@ const checkAdmin = (request, response, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, secretKey);
-      const admin = decoded.admin;
+      const admin = decoded.jti;
       const appName = decoded.appName;
       if (admin && appName === 'Leader Board') {
         next();
@@ -152,25 +152,32 @@ app.post('/api/v1/results', checkAdmin, (request, response) => {
     run_2,
     run_3,
     final } = request.body;
+
+  let result = ['event_id', 'division_id', 'rider_id', 'run_1', 'run_2', 'run_3', 'final']
+    .every(prop => request.body.hasOwnProperty(prop));
   
-  database('results').insert({
-    event_id,
-    division_id,
-    rider_id,
-    run_1,
-    run_2,
-    run_3,
-    final
-  }, 'id')
-    .then(resultId => {
-      response.status(201).json({ 
-        status: 'Success! Your result has been added.',
-        resultId: resultId[0] 
+  if (result) {
+    database('results').insert({
+      event_id,
+      division_id,
+      rider_id,
+      run_1,
+      run_2,
+      run_3,
+      final
+    }, 'id')
+      .then(resultId => {
+        response.status(201).json({ 
+          status: 'Success! Your result has been added.',
+          resultId: resultId[0] 
+        });
+      })
+      .catch(error => {
+        response.status(500).json({ error });
       });
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
+  } else {
+    response.status(422).send('Please include all of the necessary properties in the request body');
+  }
 });
 
 app.post('/api/v1/media', checkAdmin, (request, response) => {
@@ -181,22 +188,29 @@ app.post('/api/v1/media', checkAdmin, (request, response) => {
     result_id,
     media_url } = request.body;
 
-  database('media').insert({
-    event_id,
-    division_id,
-    rider_id,
-    result_id,
-    media_url
-  }, 'id')
-    .then(mediaId => {
-      response.status(201).json({
-        message: 'Success! Your media has been added.',
-        mediaId: mediaId[0]
+  let result = ['event_id', 'division_id', 'rider_id', 'result_id', 'media_url']
+    .every(prop => request.body.hasOwnProperty(prop));
+
+  if (result) {
+    database('media').insert({
+      event_id,
+      division_id,
+      rider_id,
+      result_id,
+      media_url
+    }, 'id')
+      .then(mediaId => {
+        response.status(201).json({
+          message: 'Success! Your media has been added.',
+          mediaId: mediaId[0]
+        });
+      })
+      .catch(error => {
+        response.status(500).json({ error });
       });
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
+  } else {
+    response.status(422).send('Please include all of the necessary properties in the request body');
+  }
 });
 
 app.delete('/api/v1/media/:id', checkAdmin, (request, response) => {
@@ -257,6 +271,25 @@ app.patch('/api/v1/riders/:id', checkAdmin, (request, response) => {
       response.status(203).json({
         status: "success",
         rider
+      });
+    });
+});
+
+app.get('/api/v1/media', checkAuth, (request, response) => {
+  const riderId = request.query.rider;
+  return database('media').where({
+    rider_id: riderId
+  }).select()
+    .then(results => {
+      return response.status(200).json({
+        status: 'success',
+        results
+      });
+    })
+    .catch(error => {
+      response.status(500).json({
+        message: "results not found",
+        error
       });
     });
 });

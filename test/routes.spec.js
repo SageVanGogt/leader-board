@@ -20,11 +20,11 @@ describe('API routes', () => {
   let token;
   let email = 'shooter.mcgavin@protour.com';
   let appName = 'Leader Board';
-  let admin = true;
+  let jti = true;
 
   beforeEach(function (done) {
     token = jwt.sign({
-      email, appName, admin
+      email, appName, jti
     }, process.env.SECRET_KEY); 
     knex.migrate.rollback()
       .then(function () {
