@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+const jwt = require('jsonwebtoken');
 app.set('port', process.env.PORT || 3000);
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin", "*");
@@ -15,7 +17,66 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/api/v1/events', (request, response) => {
+const checkAuth = (request, response, next) => {
+  const { token } = request.body;
+  const secretKey = process.env.SECRET_KEY;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, secretKey);
+      if (decoded.appName === 'What?') {
+        next();
+      } else {
+        response.status(403).send('Invalid application.');
+      }
+    } catch (err) {
+      response.status(403).send('Invalid token.');
+    }
+  } else {
+    response.status(403).send('You must be authorized to hit this endpoint.');
+  }
+};
+
+const checkAdmin = (request, response, next) => {
+  const { token } = request.body;
+  const secretKey = process.env.SECRET_KEY;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, secretKey);
+      const admin = decoded.jti;
+      const appName = decoded.appName;
+      if (admin && appName === 'What?') {
+        next();
+      } else if (admin && appName !== 'What?'){
+        response.status(403).send('Invalid application.');
+      } else if (!admin) {
+        response.status(403).send('You must be an admin to access this endpoint');
+      }
+    } catch (err) {
+      response.status(403).send('Invalid token.');
+    }
+  } else {
+    response.status(403).send('You must be authorized to hit this endpoint.');
+  }
+};
+
+app.post('/authenticate', (request, response) => {
+  const { email, appName } = request.body;
+  const authPayload = { email, appName };
+  const secretKey = process.env.SECRET_KEY;
+  const brokenEmail = email.split('@');
+  const admin = brokenEmail[1];
+
+  if (email && appName) {
+    const token = admin === 'turing.io' ? 
+      jwt.sign(authPayload, secretKey, { expiresIn: '2 days', jwtid: 'admin' }) : 
+      jwt.sign(authPayload, secretKey, { expiresIn: '2 days' });
+    response.status(201).json({ token });
+  } else {
+    response.status(422).send('You need to include an email AND appName in the request body.');
+  }
+});
+
+app.get('/api/v1/events', checkAuth, (request, response) => {
   return database('events').select()
     .then(events => {
       return response.status(200).json({
@@ -28,7 +89,7 @@ app.get('/api/v1/events', (request, response) => {
     });
 });
 
-app.get('/api/v1/riders', (request, response) => {
+app.get('/api/v1/riders', checkAuth, (request, response) => {
   return database('riders').select()
     .then(riders => {
       return response.status(200).json({
@@ -41,7 +102,7 @@ app.get('/api/v1/riders', (request, response) => {
     });
 });
 
-app.get('/api/v1/riders/:id/results', (request, response) => {
+app.get('/api/v1/riders/:id/results', checkAuth, (request, response) => {
   const riderId = request.params.id;
   return database('results').where({
     rider_id: riderId
@@ -57,7 +118,7 @@ app.get('/api/v1/riders/:id/results', (request, response) => {
     });
 });
 
-app.get('/api/v1/events/:eventId/division/:divId/results', (request, response) => {
+app.get('/api/v1/events/:eventId/division/:divId/results', checkAuth, (request, response) => {
   const { eventId, divId } = request.params;
   return database('results').where({
     event_id: eventId,
@@ -74,7 +135,7 @@ app.get('/api/v1/events/:eventId/division/:divId/results', (request, response) =
     });
 });
 
-app.post('/api/v1/results', (request, response) => {
+app.post('/api/v1/results', checkAdmin, (request, response) => {
   const {
     event_id,
     division_id,
@@ -104,7 +165,7 @@ app.post('/api/v1/results', (request, response) => {
     });
 });
 
-app.post('/api/v1/media', (request, response) => {
+app.post('/api/v1/media', checkAdmin, (request, response) => {
   const {
     event_id,
     division_id,
@@ -130,7 +191,7 @@ app.post('/api/v1/media', (request, response) => {
     });
 });
 
-app.delete('/api/v1/media/:id', (request, response) => {
+app.delete('/api/v1/media/:id', checkAdmin, (request, response) => {
   const mediaId = request.params.id;
   database('media').where({
     id: mediaId
@@ -144,7 +205,7 @@ app.delete('/api/v1/media/:id', (request, response) => {
     });
 });
 
-app.delete('/api/v1/results/:id', (request, response) => {
+app.delete('/api/v1/results/:id', checkAdmin, (request, response) => {
   const resultId = request.params.id;
   database('results').where({
     id: resultId
@@ -158,7 +219,7 @@ app.delete('/api/v1/results/:id', (request, response) => {
     });
 });
 
-app.patch('/api/v1/results/:id', (request, response) => {
+app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
   const resultId = request.params.id;
   const updatedResult = request.body.result;
 
@@ -173,7 +234,7 @@ app.patch('/api/v1/results/:id', (request, response) => {
     });
 });
 
-app.patch('/api/v1/riders/:id', (request, response) => {
+app.patch('/api/v1/riders/:id', checkAdmin, (request, response) => {
   const riderId = request.params.id;
   const updatedRider = request.body.rider;
 

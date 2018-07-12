@@ -32,6 +32,15 @@ button {
   font-size: 2rem;
 }
 
-.token {
+.hidden {
   display: none;
+}
+
+.token {
+  width: 50vw;
+  background-color: rgba(41, 41, 41, 0.8);
+  color: #f6e200;
+  word-wrap: break-word;
+  padding: 10px;
+  font-size: 1.25rem;
 }
