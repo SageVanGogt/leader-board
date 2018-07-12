@@ -241,7 +241,43 @@ describe('API routes', () => {
           response.should.have.status(404);
           response.body.error.should.equal('No project name has been provided');
           done();
+        });
+    });
+  });
+
+  describe('POST /api/v1/media', () => {
+    it('should create a new media', done => {
+      chai.request(server)
+        .post('/api/v1/media')
+        .send({
+          event_id: 1,
+          division_id: 3,
+          rider_id: 1,
+          result_id: 1,
+          media_url: "https://www.youtube.com/watch?v=RRB-mxrbUiI"
         })
-    })
-  })
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(201);
+          response.body.should.be.a('object');
+          response.body.should.have.property('message');
+          response.body.message.should.equal('Success! Your media has been added.');
+          response.body.should.have.property('mediaId');
+          response.body.mediaId.should.equal(1);
+          done();
+        });
+    });
+
+    it.skip('should not create a record if the post body is missing info', done => {
+      chai.request(server)
+        .post('/api/v1/projects')
+        .send({
+        })
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.error.should.equal('No project name has been provided');
+          done();
+        });
+    });
+  });
 });
