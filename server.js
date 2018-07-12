@@ -248,7 +248,6 @@ app.delete('/api/v1/results/:id', checkAdmin, (request, response) => {
 app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
   const resultId = request.params.id;
   const updatedResult = request.body.result;
-
   return database('results')
     .where({ id: resultId })
     .update(updatedResult)
