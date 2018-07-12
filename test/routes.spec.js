@@ -99,4 +99,27 @@ describe('API routes', () => {
         });
     });
   });
+
+  describe('GET /api/v1/riders', () => {
+    it('should return an array of riders', done => {
+      chai.request(server)
+        .get('/api/v1/riders')
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.riders.should.be.a('array');
+          response.body.riders.length.should.equal(53);
+          response.body.riders[0].should.have.property('name');
+          response.body.riders[0].name.should.equal('Chloe KIM');
+          response.body.riders[0].should.have.property('gender');
+          response.body.riders[0].gender.should.equal('womens');
+          response.body.riders[0].should.have.property('img');
+          response.body.riders[0].img.should.equal('https://stillimg.olympic.org/flags/1x1/340x340/usa.png?interpolation=lanczos-none&resize=45:45, https://stillimg.olympic.org/flags/1x1/340x340/usa.png?interpolation=lanczos-none&resize=90:90 2x');
+          response.body.riders[0].should.have.property('country');
+          response.body.riders[0].country.should.equal('USA');
+          done();
+        });
+    });
+  });
 });
