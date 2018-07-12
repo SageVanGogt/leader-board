@@ -365,4 +365,29 @@ describe('API routes', () => {
         });
     });
   });
+
+  describe('GET /api/v1/media query for', () => {
+    it('should return an media for a rider', done => {
+      chai.request(server)
+        .get('/api/v1/media?rider=3')
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.media.should.be.a('array');
+          response.body.media.length.should.equal(1);
+          response.body.media[0].should.have.property('event_id');
+          response.body.media[0].event_id.should.equal(1);
+          response.body.media[0].should.have.property('division_id');
+          response.body.media[0].division_id.should.equal(3);
+          response.body.media[0].should.have.property('rider_id');
+          response.body.media[0].rider_id.should.equal(3);
+          response.body.media[0].should.have.property('result_id');
+          response.body.media[0].result_id.should.equal(3);
+          response.body.media[0].should.have.property('media_url');
+          response.body.media[0].media_url.should.equal('dankocean.youtube.com');
+          done();
+        });
+    });
+  });
 });

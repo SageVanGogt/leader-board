@@ -279,15 +279,15 @@ app.get('/api/v1/media', checkAuth, (request, response) => {
   return database('media').where({
     rider_id: riderId
   }).select()
-    .then(results => {
+    .then(media => {
       return response.status(200).json({
         status: 'success',
-        results
+        media
       });
     })
     .catch(error => {
       response.status(500).json({
-        message: "results not found",
+        message: "media not found",
         error
       });
     });
