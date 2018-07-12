@@ -305,4 +305,29 @@ describe('API routes', () => {
         });
     });
   });
+
+  describe('DELETE /api/v1/media/:id', () => {
+    it.skip('should respond with a success message', (done) => {
+      knex('media')
+        .select('*')
+        .then((media) => {
+          const mediaObject = media[0];
+          const lengthBeforeDelete = media.length;
+          chai.request(server)
+            .delete(`/api/v1/media/${mediaObject.id}`)
+            .set('authorization', token) 
+            .end((err, response) => {
+              should.not.exist(err);
+              response.status.should.equal(202);
+              response.type.should.equal('application/json');
+              response.body.message.should.equal('Success! media id #1 had been removed.');
+              knex('media').select('*')
+                .then((updatedMedia) => {
+                  updatedMedia.length.should.equal(lengthBeforeDelete - 1);
+                  done();
+                });
+            });
+        });
+    });
+  });
 });
