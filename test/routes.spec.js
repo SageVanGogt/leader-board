@@ -232,14 +232,17 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('should not create a record if the post body is missing info', done => {
+    it('should not create a record if the post body is necessary missing info', done => {
       chai.request(server)
-        .post('/api/v1/projects')
+        .post('/api/v1/results')
         .send({
+          event_id: 1,
+          division_id: 3
         })
+        .set('authorization', token)
         .end((err, response) => {
-          response.should.have.status(404);
-          response.body.error.should.equal('No project name has been provided');
+          response.should.have.status(422);
+          response.body.message.should.equal('Please include all of the necessary properties in the request body');
           done();
         });
     });
@@ -268,14 +271,18 @@ describe('API routes', () => {
         });
     });
 
-    it.skip('should not create a record if the post body is missing info', done => {
+    it('should not accpet media if the post body is missing necessary info', done => {
       chai.request(server)
-        .post('/api/v1/projects')
+        .post('/api/v1/media')
         .send({
+          event_id: 1,
+          division_id: 3,
+          rider_id: 50
         })
+        .set('authorization', token)
         .end((err, response) => {
-          response.should.have.status(404);
-          response.body.error.should.equal('No project name has been provided');
+          response.should.have.status(422);
+          response.body.message.should.equal('Please include all of the necessary properties in the request body');
           done();
         });
     });
@@ -334,7 +341,7 @@ describe('API routes', () => {
   describe('PATCH /api/v1/results/:id', () => {
     it('should update result values', done => {
       chai.request(server)
-        .patch('/api/v1/results/0')
+        .patch('/api/v1/results/1')
         .send({
           result: {
             run_1: "23",
@@ -352,15 +359,23 @@ describe('API routes', () => {
           done();
         });
     });
+  });
 
-    it.skip('should not create a record if the post body is missing info', done => {
+  describe('PATCH /api/v1/riders/:id', () => {
+    it('should update rider values', done => {
       chai.request(server)
-        .post('/api/v1/projects')
+        .patch('/api/v1/riders/0')
         .send({
+          rider: {
+            country: 'Petoria'
+          }
         })
+        .set('authorization', token)
         .end((err, response) => {
-          response.should.have.status(404);
-          response.body.error.should.equal('No project name has been provided');
+          response.should.have.status(203);
+          response.body.should.be.a('object');
+          response.body.should.have.property('status');
+          response.body.status.should.equal('success');
           done();
         });
     });
