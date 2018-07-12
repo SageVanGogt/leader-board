@@ -11,8 +11,23 @@ const jwt = require('jsonwebtoken');
 chai.use(chaiHttp);
 
 describe('CLIENT routes', () => {
-  it('should', () => {
-    
+  it('should return the homepage', (done) => {
+    chai.request(server)
+      .get('/')
+      .end((error, response) => {
+        response.should.have.status(200);
+        response.should.be.html;
+        done();
+      });
+  });
+
+  it('should return 404 for a route that does not exist', (done) => {
+    chai.request(server)
+      .get('/elchupacabra')
+      .end((error, response) => {
+        response.should.status(404);
+        done();
+      });
   });
 });
 
@@ -303,7 +318,7 @@ describe('API routes', () => {
               should.not.exist(err);
               response.status.should.equal(202);
               response.type.should.equal('application/json');
-              response.body.message.should.equal('Success! result id #1 had been removed.');
+              response.body.message.should.equal('Success! Result ID #1 had been removed.');
               knex('results').select('*')
                 .then((updatedResults) => {
                   updatedResults.length.should.equal(lengthBeforeDelete - 1);
@@ -328,7 +343,7 @@ describe('API routes', () => {
               should.not.exist(err);
               response.status.should.equal(202);
               response.type.should.equal('application/json');
-              response.body.message.should.equal('Success! media id #1 had been removed.');
+              response.body.message.should.equal('Success! Media ID #1 had been removed.');
               knex('media').select('*')
                 .then((updatedMedia) => {
                   updatedMedia.length.should.equal(lengthBeforeDelete - 1);
