@@ -122,4 +122,33 @@ describe('API routes', () => {
         });
     });
   });
+  
+  describe('GET /api/v1/riders/:id/results', () => {
+    it('should return an array of results', done => {
+      chai.request(server)
+        .get('/api/v1/riders/1/results')
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.results.should.be.a('array');
+          response.body.results.length.should.equal(1);
+          response.body.results[0].should.have.property('event_id');
+          response.body.results[0].event_id.should.equal(1);
+          response.body.results[0].should.have.property('division_id');
+          response.body.results[0].division_id.should.equal(3);
+          response.body.results[0].should.have.property('rider_id');
+          response.body.results[0].rider_id.should.equal(1);
+          response.body.results[0].should.have.property('run_1');
+          response.body.results[0].run_1.should.equal('no data');
+          response.body.results[0].should.have.property('run_2');
+          response.body.results[0].run_2.should.equal('no data');
+          response.body.results[0].should.have.property('run_3');
+          response.body.results[0].run_3.should.equal('no data');
+          response.body.results[0].should.have.property('final');
+          response.body.results[0].final.should.equal('1');
+          done();
+        });
+    });
+  });
 });
