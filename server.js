@@ -176,7 +176,9 @@ app.post('/api/v1/results', checkAdmin, (request, response) => {
         response.status(500).json({ error });
       });
   } else {
-    response.status(422).send('Please include all of the necessary properties in the request body');
+    response.status(422).json({
+      message: 'Please include all of the necessary properties in the request body'
+    });
   }
 });
 
@@ -209,7 +211,9 @@ app.post('/api/v1/media', checkAdmin, (request, response) => {
         response.status(500).json({ error });
       });
   } else {
-    response.status(422).send('Please include all of the necessary properties in the request body');
+    response.status(422).json({
+      message: 'Please include all of the necessary properties in the request body'
+    });
   }
 });
 
@@ -263,7 +267,7 @@ app.patch('/api/v1/riders/:id', checkAdmin, (request, response) => {
   const riderId = request.params.id;
   const updatedRider = request.body.rider;
 
-  return database('results')
+  return database('riders')
     .where({ id: riderId })
     .update(updatedRider)
     .then(rider => {

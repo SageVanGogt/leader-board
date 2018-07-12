@@ -232,12 +232,12 @@ describe('API routes', () => {
         });
     });
 
-    it('should not create a record if the post body is necessary missing info', done => {
+    it('should not store results if the post body is missing info', done => {
       chai.request(server)
         .post('/api/v1/results')
         .send({
           event_id: 1,
-          division_id: 3
+          division_id: 1
         })
         .set('authorization', token)
         .end((err, response) => {
@@ -271,13 +271,14 @@ describe('API routes', () => {
         });
     });
 
-    it('should not accpet media if the post body is missing necessary info', done => {
+    it('should not store media if the post body is missing info', done => {
       chai.request(server)
         .post('/api/v1/media')
         .send({
           event_id: 1,
-          division_id: 3,
-          rider_id: 50
+          division_id: 1,
+          rider_id: 1,
+          media_url: 'cats'
         })
         .set('authorization', token)
         .end((err, response) => {
@@ -341,7 +342,7 @@ describe('API routes', () => {
   describe('PATCH /api/v1/results/:id', () => {
     it('should update result values', done => {
       chai.request(server)
-        .patch('/api/v1/results/1')
+        .patch('/api/v1/results/0')
         .send({
           result: {
             run_1: "23",
@@ -367,7 +368,7 @@ describe('API routes', () => {
         .patch('/api/v1/riders/0')
         .send({
           rider: {
-            country: 'Petoria'
+            country: "petoria"
           }
         })
         .set('authorization', token)
