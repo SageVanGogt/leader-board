@@ -116,7 +116,10 @@ app.get('/api/v1/riders/:id/results', checkAuth, (request, response) => {
       });
     })
     .catch(error => {
-      response.status(500).json({ error });
+      response.status(500).json({
+        message: "results not found",
+        error
+      });
     });
 });
 
@@ -133,7 +136,10 @@ app.get('/api/v1/events/:eventId/division/:divId/results', checkAuth, (request, 
       });
     })
     .catch(error => {
-      response.status(500).json({ error });
+      response.status(500).json({
+        message: "results not found",
+        error
+      });
     });
 });
 

@@ -124,7 +124,7 @@ describe('API routes', () => {
   });
   
   describe('GET /api/v1/riders/:id/results', () => {
-    it('should return an array of results', done => {
+    it('should return an array of results for one rider', done => {
       chai.request(server)
         .get('/api/v1/riders/1/results')
         .set('authorization', token)
@@ -147,6 +147,61 @@ describe('API routes', () => {
           response.body.results[0].run_3.should.equal('no data');
           response.body.results[0].should.have.property('final');
           response.body.results[0].final.should.equal('1');
+          done();
+        });
+    });
+
+    it('should return results not found if rider does not exist', (done) => {
+      chai.request(server)
+        .get('/api/v1/riders/:id/results')
+        .set('authorization', token)
+        .end((error, response) => {
+          response.should.be.json;
+          response.should.have.status(500);
+          response.body.should.have.property('message');
+          response.body.message.should.equal('results not found');
+          done();
+        });
+    });
+  });
+
+  describe('GET /api/v1/events/:eventId/division/:divId/results', () => {
+    it('should return an array of results for a division of an event', done => {
+      chai.request(server)
+        .get('/api/v1/events/1/division/3/results')
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.results.should.be.a('array');
+          response.body.results.length.should.equal(24);
+          response.body.results[0].should.have.property('event_id');
+          response.body.results[0].event_id.should.equal(1);
+          response.body.results[0].should.have.property('division_id');
+          response.body.results[0].division_id.should.equal(3);
+          response.body.results[0].should.have.property('rider_id');
+          response.body.results[0].rider_id.should.equal(1);
+          response.body.results[0].should.have.property('run_1');
+          response.body.results[0].run_1.should.equal('no data');
+          response.body.results[0].should.have.property('run_2');
+          response.body.results[0].run_2.should.equal('no data');
+          response.body.results[0].should.have.property('run_3');
+          response.body.results[0].run_3.should.equal('no data');
+          response.body.results[0].should.have.property('final');
+          response.body.results[0].final.should.equal('1');
+          done();
+        });
+    });
+
+    it('should return results not found if event division does not exist', (done) => {
+      chai.request(server)
+        .get('/api/v1/events/:eventId/division/:divId/results')
+        .set('authorization', token)
+        .end((error, response) => {
+          response.should.be.json;
+          response.should.have.status(500);
+          response.body.should.have.property('message');
+          response.body.message.should.equal('results not found');
           done();
         });
     });
