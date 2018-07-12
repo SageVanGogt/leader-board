@@ -252,8 +252,8 @@ describe('API routes', () => {
         .send({
           event_id: 1,
           division_id: 3,
-          rider_id: 1,
-          result_id: 1,
+          rider_id: 2,
+          result_id: 2,
           media_url: "https://www.youtube.com/watch?v=RRB-mxrbUiI"
         })
         .set('authorization', token)
@@ -263,7 +263,7 @@ describe('API routes', () => {
           response.body.should.have.property('message');
           response.body.message.should.equal('Success! Your media has been added.');
           response.body.should.have.property('mediaId');
-          response.body.mediaId.should.equal(1);
+          response.body.mediaId.should.equal(3);
           done();
         });
     });
@@ -307,7 +307,7 @@ describe('API routes', () => {
   });
 
   describe('DELETE /api/v1/media/:id', () => {
-    it.skip('should respond with a success message', (done) => {
+    it('should respond with a success message', (done) => {
       knex('media')
         .select('*')
         .then((media) => {
@@ -327,6 +327,66 @@ describe('API routes', () => {
                   done();
                 });
             });
+        });
+    });
+  });
+
+  describe('PATCH /api/v1/results/:id', () => {
+    it('should update result values', done => {
+      chai.request(server)
+        .patch('/api/v1/results/0')
+        .send({
+          result: {
+            run_1: "23",
+            run_2: "29",
+            run_3: "21",
+            final: "80"
+          }
+        })
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(203);
+          response.body.should.be.a('object');
+          response.body.should.have.property('status');
+          response.body.status.should.equal('success');
+          done();
+        });
+    });
+
+    it.skip('should not create a record if the post body is missing info', done => {
+      chai.request(server)
+        .post('/api/v1/projects')
+        .send({
+        })
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.error.should.equal('No project name has been provided');
+          done();
+        });
+    });
+  });
+
+  describe('GET /api/v1/media query for', () => {
+    it('should return an media for a rider', done => {
+      chai.request(server)
+        .get('/api/v1/media?rider=3')
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.media.should.be.a('array');
+          response.body.media.length.should.equal(1);
+          response.body.media[0].should.have.property('event_id');
+          response.body.media[0].event_id.should.equal(1);
+          response.body.media[0].should.have.property('division_id');
+          response.body.media[0].division_id.should.equal(3);
+          response.body.media[0].should.have.property('rider_id');
+          response.body.media[0].rider_id.should.equal(3);
+          response.body.media[0].should.have.property('result_id');
+          response.body.media[0].result_id.should.equal(3);
+          response.body.media[0].should.have.property('media_url');
+          response.body.media[0].media_url.should.equal('dankocean.youtube.com');
+          done();
         });
     });
   });

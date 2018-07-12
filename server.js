@@ -248,7 +248,6 @@ app.delete('/api/v1/results/:id', checkAdmin, (request, response) => {
 app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
   const resultId = request.params.id;
   const updatedResult = request.body.result;
-
   return database('results')
     .where({ id: resultId })
     .update(updatedResult)
@@ -280,15 +279,15 @@ app.get('/api/v1/media', checkAuth, (request, response) => {
   return database('media').where({
     rider_id: riderId
   }).select()
-    .then(results => {
+    .then(media => {
       return response.status(200).json({
         status: 'success',
-        results
+        media
       });
     })
     .catch(error => {
       response.status(500).json({
-        message: "results not found",
+        message: "media not found",
         error
       });
     });
