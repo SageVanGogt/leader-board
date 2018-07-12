@@ -275,6 +275,25 @@ app.patch('/api/v1/riders/:id', checkAdmin, (request, response) => {
     });
 });
 
+app.get('/api/v1/media', checkAuth, (request, response) => {
+  const riderId = request.query.rider;
+  return database('media').where({
+    rider_id: riderId
+  }).select()
+    .then(results => {
+      return response.status(200).json({
+        status: 'success',
+        results
+      });
+    })
+    .catch(error => {
+      response.status(500).json({
+        message: "results not found",
+        error
+      });
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost: 3000');
 });
