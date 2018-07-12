@@ -18,12 +18,12 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const checkAuth = (request, response, next) => {
-  const { token } = request.body;
+  const token = request.headers.authorization;
   const secretKey = process.env.SECRET_KEY;
   if (token) {
     try {
       const decoded = jwt.verify(token, secretKey);
-      if (decoded.appName === 'What?') {
+      if (decoded.appName === 'Leader Board') {
         next();
       } else {
         response.status(403).send('Invalid application.');
@@ -44,9 +44,9 @@ const checkAdmin = (request, response, next) => {
       const decoded = jwt.verify(token, secretKey);
       const admin = decoded.jti;
       const appName = decoded.appName;
-      if (admin && appName === 'What?') {
+      if (admin && appName === 'Leader Board') {
         next();
-      } else if (admin && appName !== 'What?'){
+      } else if (admin && appName !== 'Leader Board'){
         response.status(403).send('Invalid application.');
       } else if (!admin) {
         response.status(403).send('You must be an admin to access this endpoint');
@@ -70,9 +70,11 @@ app.post('/authenticate', (request, response) => {
     const token = admin === 'turing.io' ? 
       jwt.sign(authPayload, secretKey, { expiresIn: '2 days', jwtid: 'admin' }) : 
       jwt.sign(authPayload, secretKey, { expiresIn: '2 days' });
-    response.status(201).json({ token });
+    response.status(200).json({ token });
   } else {
-    response.status(422).send('You need to include an email AND appName in the request body.');
+    response.status(422).json({
+      message: 'You need to include an email AND appName in the request body.'
+    });
   }
 });
 
@@ -114,7 +116,10 @@ app.get('/api/v1/riders/:id/results', checkAuth, (request, response) => {
       });
     })
     .catch(error => {
-      response.status(500).json({ error });
+      response.status(500).json({
+        message: "results not found",
+        error
+      });
     });
 });
 
@@ -131,7 +136,10 @@ app.get('/api/v1/events/:eventId/division/:divId/results', checkAuth, (request, 
       });
     })
     .catch(error => {
-      response.status(500).json({ error });
+      response.status(500).json({
+        message: "results not found",
+        error
+      });
     });
 });
 
