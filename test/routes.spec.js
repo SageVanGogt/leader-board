@@ -280,4 +280,29 @@ describe('API routes', () => {
         });
     });
   });
+
+  describe('DELETE /api/v1/results/:id', () => {
+    it('should respond with a success message', (done) => {
+      knex('results')
+        .select('*')
+        .then((results) => {
+          const resultObject = results[0];
+          const lengthBeforeDelete = results.length;
+          chai.request(server)
+            .delete(`/api/v1/results/${resultObject.id}`)
+            .set('authorization', token) 
+            .end((err, response) => {
+              should.not.exist(err);
+              response.status.should.equal(202);
+              response.type.should.equal('application/json');
+              response.body.message.should.equal('Success! result id #1 had been removed.');
+              knex('results').select('*')
+                .then((updatedResults) => {
+                  updatedResults.length.should.equal(lengthBeforeDelete - 1);
+                  done();
+                });
+            });
+        });
+    });
+  });
 });

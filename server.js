@@ -206,7 +206,9 @@ app.delete('/api/v1/media/:id', checkAdmin, (request, response) => {
   })
     .del()
     .then(() => {
-      response.status(200).send(`Success! media id #${mediaId} had been removed.`);
+      response.status(202).json({
+        message: `Success! media id #${mediaId} had been removed.`
+      });
     })
     .catch(error => {
       response.status(500).json({ error });
@@ -220,7 +222,9 @@ app.delete('/api/v1/results/:id', checkAdmin, (request, response) => {
   })
     .del()
     .then(() => {
-      response.status(200).send(`Success! media id #${resultId} had been removed.`);
+      response.status(202).json({
+        message: `Success! result id #${resultId} had been removed.`
+      });
     })
     .catch(error => {
       response.status(500).json({ error });
