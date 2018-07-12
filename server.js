@@ -153,7 +153,7 @@ app.post('/api/v1/results', checkAdmin, (request, response) => {
     run_3,
     final } = request.body;
 
-  let result = ['event_id', 'division_id', 'rider_id', 'run_1', 'run_2', 'run_3', 'final']
+  let result = ['event_id', 'division_id', 'rider_id']
     .every(prop => request.body.hasOwnProperty(prop));
   
   if (result) {
@@ -225,7 +225,7 @@ app.delete('/api/v1/media/:id', checkAdmin, (request, response) => {
     .del()
     .then(() => {
       response.status(202).json({
-        message: `Success! media id #${mediaId} had been removed.`
+        message: `Success! Media ID #${mediaId} had been removed.`
       });
     })
     .catch(error => {
@@ -241,7 +241,7 @@ app.delete('/api/v1/results/:id', checkAdmin, (request, response) => {
     .del()
     .then(() => {
       response.status(202).json({
-        message: `Success! result id #${resultId} had been removed.`
+        message: `Success! Result ID #${resultId} had been removed.`
       });
     })
     .catch(error => {
@@ -258,7 +258,7 @@ app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
     .then(result => {
       response.status(203).json({
         status: "success",
-        result
+        updatedResults: updatedResult
       });
     });
 });
@@ -273,7 +273,7 @@ app.patch('/api/v1/riders/:id', checkAdmin, (request, response) => {
     .then(rider => {
       response.status(203).json({
         status: "success",
-        rider
+        updatedRiderInfo: updatedRider
       });
     });
 });
