@@ -206,4 +206,128 @@ describe('API routes', () => {
         });
     });
   });
+
+  describe('POST /api/v1/results', () => {
+    it('should create a new result', done => {
+      chai.request(server)
+        .post('/api/v1/results')
+        .send({
+          event_id:1,
+          division_id:3,
+          rider_id: 1,
+          run_1: "23",
+          run_2: "29",
+          run_3: "21",
+          final: "80"
+        })
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(201);
+          response.body.should.be.a('object');
+          response.body.should.have.property('status');
+          response.body.status.should.equal('Success! Your result has been added.');
+          response.body.should.have.property('resultId');
+          response.body.resultId.should.equal(54);
+          done();
+        });
+    });
+
+    it.skip('should not create a record if the post body is missing info', done => {
+      chai.request(server)
+        .post('/api/v1/projects')
+        .send({
+        })
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.error.should.equal('No project name has been provided');
+          done();
+        });
+    });
+  });
+
+  describe('POST /api/v1/media', () => {
+    it('should create a new media', done => {
+      chai.request(server)
+        .post('/api/v1/media')
+        .send({
+          event_id: 1,
+          division_id: 3,
+          rider_id: 1,
+          result_id: 1,
+          media_url: "https://www.youtube.com/watch?v=RRB-mxrbUiI"
+        })
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(201);
+          response.body.should.be.a('object');
+          response.body.should.have.property('message');
+          response.body.message.should.equal('Success! Your media has been added.');
+          response.body.should.have.property('mediaId');
+          response.body.mediaId.should.equal(1);
+          done();
+        });
+    });
+
+    it.skip('should not create a record if the post body is missing info', done => {
+      chai.request(server)
+        .post('/api/v1/projects')
+        .send({
+        })
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.error.should.equal('No project name has been provided');
+          done();
+        });
+    });
+  });
+
+  describe('DELETE /api/v1/results/:id', () => {
+    it('should respond with a success message', (done) => {
+      knex('results')
+        .select('*')
+        .then((results) => {
+          const resultObject = results[0];
+          const lengthBeforeDelete = results.length;
+          chai.request(server)
+            .delete(`/api/v1/results/${resultObject.id}`)
+            .set('authorization', token) 
+            .end((err, response) => {
+              should.not.exist(err);
+              response.status.should.equal(202);
+              response.type.should.equal('application/json');
+              response.body.message.should.equal('Success! result id #1 had been removed.');
+              knex('results').select('*')
+                .then((updatedResults) => {
+                  updatedResults.length.should.equal(lengthBeforeDelete - 1);
+                  done();
+                });
+            });
+        });
+    });
+  });
+
+  describe('DELETE /api/v1/media/:id', () => {
+    it.skip('should respond with a success message', (done) => {
+      knex('media')
+        .select('*')
+        .then((media) => {
+          const mediaObject = media[0];
+          const lengthBeforeDelete = media.length;
+          chai.request(server)
+            .delete(`/api/v1/media/${mediaObject.id}`)
+            .set('authorization', token) 
+            .end((err, response) => {
+              should.not.exist(err);
+              response.status.should.equal(202);
+              response.type.should.equal('application/json');
+              response.body.message.should.equal('Success! media id #1 had been removed.');
+              knex('media').select('*')
+                .then((updatedMedia) => {
+                  updatedMedia.length.should.equal(lengthBeforeDelete - 1);
+                  done();
+                });
+            });
+        });
+    });
+  });
 });
