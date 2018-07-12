@@ -18,12 +18,12 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const checkAuth = (request, response, next) => {
-  const { token } = request.body;
+  const token = request.headers.authorization;
   const secretKey = process.env.SECRET_KEY;
   if (token) {
     try {
       const decoded = jwt.verify(token, secretKey);
-      if (decoded.appName === 'What?') {
+      if (decoded.appName === 'Leader Board') {
         next();
       } else {
         response.status(403).send('Invalid application.');
@@ -44,9 +44,9 @@ const checkAdmin = (request, response, next) => {
       const decoded = jwt.verify(token, secretKey);
       const admin = decoded.jti;
       const appName = decoded.appName;
-      if (admin && appName === 'What?') {
+      if (admin && appName === 'Leader Board') {
         next();
-      } else if (admin && appName !== 'What?'){
+      } else if (admin && appName !== 'Leader Board'){
         response.status(403).send('Invalid application.');
       } else if (!admin) {
         response.status(403).send('You must be an admin to access this endpoint');

@@ -80,20 +80,21 @@ describe('API routes', () => {
   });
 
   describe('GET /api/v1/events', () => {
-    it.skip('should return an array of events', done => {
+    it('should return an array of events', done => {
       chai.request(server)
         .get('/api/v1/events')
+        .set('authorization', token)
         .end((err, response) => {
           response.should.have.status(200);
           response.should.be.json;
-          response.body.should.be.a('array');
-          response.body.length.should.equal(1);
-          response.body[0].should.have.property('name');
-          response.body[0].name.should.equal('Olympics');
-          response.body[0].should.have.property('year');
-          response.body[0].year.should.equal('2018');
-          response.body[0].should.have.property('location');
-          response.body[0].location.should.equal('PyeongChang');
+          response.body.events.should.be.a('array');
+          response.body.events.length.should.equal(1);
+          response.body.events[0].should.have.property('name');
+          response.body.events[0].name.should.equal('Olympics');
+          response.body.events[0].should.have.property('year');
+          response.body.events[0].year.should.equal('2018');
+          response.body.events[0].should.have.property('location');
+          response.body.events[0].location.should.equal('PyeongChang');
           done();
         });
     });
