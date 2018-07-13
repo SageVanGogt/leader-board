@@ -255,7 +255,7 @@ app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
   return database('results')
     .where({ id: resultId })
     .update(updatedResult)
-    .then(result => {
+    .then(() => {
       response.status(203).json({
         status: "success",
         updatedResults: updatedResult
@@ -270,7 +270,7 @@ app.patch('/api/v1/riders/:id', checkAdmin, (request, response) => {
   return database('riders')
     .where({ id: riderId })
     .update(updatedRider)
-    .then(rider => {
+    .then(() => {
       response.status(203).json({
         status: "success",
         updatedRiderInfo: updatedRider
