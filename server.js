@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://leaderboard-CO.surge.sh");
+  res.header("Access-Control-Allow-Origin", "http://leaderboard-co.surge.sh");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
