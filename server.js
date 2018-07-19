@@ -6,7 +6,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 const jwt = require('jsonwebtoken');
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin", "*");
   response.header("Access-Control-Allow-Methods", "*");
@@ -16,6 +16,11 @@ app.use(function (request, response, next) {
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://leaderboard-CO.surge.sh");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 const checkAuth = (request, response, next) => {
   const token = request.headers.authorization;
@@ -78,7 +83,7 @@ app.post('/authenticate', (request, response) => {
   }
 });
 
-app.get('/api/v1/events', checkAuth, (request, response) => {
+app.get('/api/v1/events', (request, response) => {
   return database('events').select()
     .then(events => {
       return response.status(200).json({
@@ -297,8 +302,9 @@ app.get('/api/v1/media', checkAuth, (request, response) => {
     });
 });
 
+
 app.listen(app.get('port'), () => {
-  console.log('Express intro running on localhost: 3000');
+  console.log(`Express intro running on localhost: ${app.get('port')}`);
 });
 
 module.exports = app;
