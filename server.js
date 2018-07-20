@@ -1,11 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 const jwt = require('jsonwebtoken');
+
 app.set('port', process.env.PORT || 3001);
 app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Origin", "*");
@@ -40,6 +43,15 @@ const checkAuth = (request, response, next) => {
     response.status(403).send('You must be authorized to hit this endpoint.');
   }
 };
+
+io.on('connection', (client) => {
+  client.on('subscribeToTimer', (interval) => {
+    console.log('client is subscribing to timer with interval ', interval);
+    setInterval(() => {
+      client.emit('timer', new Date());
+    }, interval);
+  });
+});
 
 const checkAdmin = (request, response, next) => {
   const token = request.headers.authorization;
@@ -302,8 +314,7 @@ app.get('/api/v1/media', checkAuth, (request, response) => {
     });
 });
 
-
-app.listen(app.get('port'), () => {
+server.listen(app.get('port'), () => {
   console.log(`Express intro running on localhost: ${app.get('port')}`);
 });
 
