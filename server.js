@@ -45,11 +45,11 @@ const checkAuth = (request, response, next) => {
 };
 
 io.on('connection', (client) => {
-  client.on('subscribeToTimer', (interval) => {
-    console.log('client is subscribing to timer with interval ', interval);
-    setInterval(() => {
-      client.emit('timer', new Date());
-    }, interval);
+  client.on('subscribeToChange', (change) => {
+    console.log('client is subscribing to leaderboard with change ', change);
+    // setInterval(() => {
+      client.emit('change', change);
+    // }, interval);
   });
 });
 
