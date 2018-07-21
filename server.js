@@ -140,7 +140,26 @@ app.get('/api/v1/riders/:id/results', checkAuth, (request, response) => {
     });
 });
 
-app.get('/api/v1/events/:eventId/division/:divId/results', checkAuth, (request, response) => {
+app.get('/api/v1/riders/:id', (request, response) => {
+  const riderId = request.params.id;
+  return database('riders').where({
+    id: riderId
+  }).select()
+    .then(rider => {
+      return response.status(200).json({
+        status: 'success',
+        rider
+      });
+    })
+    .catch(error => {
+      response.status(500).json({
+        message: "results not found",
+        error
+      });
+    });
+});
+
+app.get('/api/v1/events/:eventId/division/:divId/results', (request, response) => {
   const { eventId, divId } = request.params;
   return database('results').where({
     event_id: eventId,
