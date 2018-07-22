@@ -301,7 +301,6 @@ app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
 
 app.patch('/api/v1/events/:eventId/divisions/:divisionId/riders/:riderId', (request, response) => {
   const {eventId, divisionId, riderId} = request.params;
-  console.log(request.params)
   const updatedResult = request.body.result;
   return database('results')
     .where({ event_id: eventId, division_id: divisionId, rider_id: riderId })
