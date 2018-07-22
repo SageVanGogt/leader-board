@@ -108,7 +108,7 @@ app.get('/api/v1/events', (request, response) => {
     });
 });
 
-app.get('/api/v1/riders', checkAuth, (request, response) => {
+app.get('/api/v1/riders', (request, response) => {
   return database('riders').select()
     .then(riders => {
       return response.status(200).json({
@@ -290,6 +290,21 @@ app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
   const updatedResult = request.body.result;
   return database('results')
     .where({ id: resultId })
+    .update(updatedResult)
+    .then(() => {
+      response.status(203).json({
+        status: "success",
+        updatedResults: updatedResult
+      });
+    });
+});
+
+app.patch('/api/v1/events/:eventId/divisions/:divisionId/riders/:riderId', (request, response) => {
+  const {eventId, divisionId, riderId} = request.params;
+  console.log(request.params)
+  const updatedResult = request.body.result;
+  return database('results')
+    .where({ event_id: eventId, division_id: divisionId, rider_id: riderId })
     .update(updatedResult)
     .then(() => {
       response.status(203).json({
