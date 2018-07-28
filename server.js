@@ -142,10 +142,17 @@ app.get('/api/v1/riders/:id/results', checkAuth, (request, response) => {
 
 app.get('/api/v1/riders/:id', (request, response) => {
   const riderId = request.params.id;
+  
   return database('riders').where({
     id: riderId
   }).select()
     .then(rider => {
+      if (!rider.length) {
+        return response.status(404).json({
+          status: 'rider not found',
+          message: 'There is no rider with that ID'
+        });
+      }
       return response.status(200).json({
         status: 'success',
         rider
@@ -153,7 +160,7 @@ app.get('/api/v1/riders/:id', (request, response) => {
     })
     .catch(error => {
       response.status(500).json({
-        message: "results not found",
+        message: "rider not found",
         error
       });
     });

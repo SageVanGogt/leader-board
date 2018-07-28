@@ -130,7 +130,7 @@ describe('API routes', () => {
           response.body.riders[0].should.have.property('gender');
           response.body.riders[0].gender.should.equal('womens');
           response.body.riders[0].should.have.property('img');
-          response.body.riders[0].img.should.equal('https://stillimg.olympic.org/flags/1x1/340x340/usa.png?interpolation=lanczos-none&resize=45:45, https://stillimg.olympic.org/flags/1x1/340x340/usa.png?interpolation=lanczos-none&resize=90:90 2x');
+          response.body.riders[0].img.should.equal('https://stillimg.olympic.org/flags/1x1/340x340/usa.png?interpolation=lanczos-none&resize=45:45');
           response.body.riders[0].should.have.property('country');
           response.body.riders[0].country.should.equal('USA');
           done();
@@ -155,11 +155,11 @@ describe('API routes', () => {
           response.body.results[0].should.have.property('rider_id');
           response.body.results[0].rider_id.should.equal(1);
           response.body.results[0].should.have.property('run_1');
-          response.body.results[0].run_1.should.equal('no data');
+          response.body.results[0].run_1.should.equal('93');
           response.body.results[0].should.have.property('run_2');
-          response.body.results[0].run_2.should.equal('no data');
+          response.body.results[0].run_2.should.equal('88');
           response.body.results[0].should.have.property('run_3');
-          response.body.results[0].run_3.should.equal('no data');
+          response.body.results[0].run_3.should.equal('90');
           response.body.results[0].should.have.property('final');
           response.body.results[0].final.should.equal('1');
           done();
@@ -175,6 +175,43 @@ describe('API routes', () => {
           response.should.have.status(500);
           response.body.should.have.property('message');
           response.body.message.should.equal('results not found');
+          done();
+        });
+    });
+  });
+
+  describe('GET /api/v1/riders/:id', () => {
+    it('should return a rider if it has a matching id', done => {
+      chai.request(server)
+        .get('/api/v1/riders/1')
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.rider.should.be.a('array');
+          response.body.rider.length.should.equal(1);
+          response.body.status.should.equal('success')
+          response.body.rider[0].should.have.property('name');
+          response.body.rider[0].name.should.equal('Chloe KIM');
+          response.body.rider[0].should.have.property('gender');
+          response.body.rider[0].gender.should.equal('womens');
+          response.body.rider[0].should.have.property('img');
+          response.body.rider[0].img.should.equal('https://stillimg.olympic.org/flags/1x1/340x340/usa.png?interpolation=lanczos-none&resize=45:45');
+          done();
+        });
+    });
+
+    it('should return rider not found if rider does not exist', (done) => {
+      chai.request(server)
+        .get('/api/v1/riders/100')
+        .set('authorization', token)
+        .end((error, response) => {
+          response.should.be.json;
+          response.should.have.status(404);
+          response.body.should.have.property('status');
+          response.body.status.should.equal('rider not found');
+          response.body.should.have.property('message');
+          response.body.message.should.equal('There is no rider with that ID');
           done();
         });
     });
@@ -197,11 +234,11 @@ describe('API routes', () => {
           response.body.results[0].should.have.property('rider_id');
           response.body.results[0].rider_id.should.equal(1);
           response.body.results[0].should.have.property('run_1');
-          response.body.results[0].run_1.should.equal('no data');
+          response.body.results[0].run_1.should.equal('93');
           response.body.results[0].should.have.property('run_2');
-          response.body.results[0].run_2.should.equal('no data');
+          response.body.results[0].run_2.should.equal('88');
           response.body.results[0].should.have.property('run_3');
-          response.body.results[0].run_3.should.equal('no data');
+          response.body.results[0].run_3.should.equal('90');
           response.body.results[0].should.have.property('final');
           response.body.results[0].final.should.equal('1');
           done();
@@ -372,6 +409,30 @@ describe('API routes', () => {
           response.body.should.be.a('object');
           response.body.should.have.property('status');
           response.body.status.should.equal('success');
+          done();
+        });
+    });
+  });
+
+  describe('PATCH /api/v1/events/:eventId/divisions/:divisionId/riders/:riderId', () => {
+    it('should update result values', done => {
+      chai.request(server)
+        .patch('/api/v1/events/1/divisions/3/riders/2')
+        .send({
+          result: {
+            run_1: "90",
+            run_2: "90",
+            run_3: "90",
+            final: "90"
+          }
+        })
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(203);
+          response.body.should.be.a('object');
+          response.body.should.have.property('status');
+          response.body.status.should.equal('success');
+          response.body.updatedResults.should.be.a('object');
           done();
         });
     });
