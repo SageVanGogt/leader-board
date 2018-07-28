@@ -180,6 +180,43 @@ describe('API routes', () => {
     });
   });
 
+  describe('GET /api/v1/riders/:id', () => {
+    it('should return a rider if it has a matching id', done => {
+      chai.request(server)
+        .get('/api/v1/riders/1')
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.rider.should.be.a('array');
+          response.body.rider.length.should.equal(1);
+          response.body.status.should.equal('success')
+          response.body.rider[0].should.have.property('name');
+          response.body.rider[0].name.should.equal('Chloe KIM');
+          response.body.rider[0].should.have.property('gender');
+          response.body.rider[0].gender.should.equal('womens');
+          response.body.rider[0].should.have.property('img');
+          response.body.rider[0].img.should.equal('https://stillimg.olympic.org/flags/1x1/340x340/usa.png?interpolation=lanczos-none&resize=45:45');
+          done();
+        });
+    });
+
+    it('should return rider not found if rider does not exist', (done) => {
+      chai.request(server)
+        .get('/api/v1/riders/100')
+        .set('authorization', token)
+        .end((error, response) => {
+          response.should.be.json;
+          response.should.have.status(404);
+          response.body.should.have.property('status');
+          response.body.status.should.equal('rider not found');
+          response.body.should.have.property('message');
+          response.body.message.should.equal('There is no rider with that ID');
+          done();
+        });
+    });
+  });
+
   describe('GET /api/v1/events/:eventId/division/:divId/results', () => {
     it('should return an array of results for a division of an event', done => {
       chai.request(server)
