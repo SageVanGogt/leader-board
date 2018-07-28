@@ -414,6 +414,30 @@ describe('API routes', () => {
     });
   });
 
+  describe('PATCH /api/v1/events/:eventId/divisions/:divisionId/riders/:riderId', () => {
+    it('should update result values', done => {
+      chai.request(server)
+        .patch('/api/v1/events/1/divisions/3/riders/2')
+        .send({
+          result: {
+            run_1: "90",
+            run_2: "90",
+            run_3: "90",
+            final: "90"
+          }
+        })
+        .set('authorization', token)
+        .end((err, response) => {
+          response.should.have.status(203);
+          response.body.should.be.a('object');
+          response.body.should.have.property('status');
+          response.body.status.should.equal('success');
+          response.body.updatedResults.should.be.a('object');
+          done();
+        });
+    });
+  });
+
   describe('PATCH /api/v1/riders/:id', () => {
     it('should update rider values', done => {
       chai.request(server)
