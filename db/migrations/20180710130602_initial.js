@@ -32,8 +32,11 @@ exports.up = function (knex, Promise) {
       table.foreign('rider_id')
         .references('riders.id');
       table.string('run_1');
+      table.string('run_1_media');
       table.string('run_2');
+      table.string('run_2_media');
       table.string('run_3');
+      table.string('run_3_media');
       table.string('final');
     }),
     knex.schema.createTable('media', function (table) {
