@@ -159,9 +159,9 @@ describe('API routes', () => {
           response.body.results[0].should.have.property('run_2');
           response.body.results[0].run_2.should.equal('88');
           response.body.results[0].should.have.property('run_3');
-          response.body.results[0].run_3.should.equal('90');
+          response.body.results[0].run_3.should.equal('0');
           response.body.results[0].should.have.property('final');
-          response.body.results[0].final.should.equal('1');
+          response.body.results[0].final.should.equal('00');
           done();
         });
     });
@@ -238,9 +238,9 @@ describe('API routes', () => {
           response.body.results[0].should.have.property('run_2');
           response.body.results[0].run_2.should.equal('88');
           response.body.results[0].should.have.property('run_3');
-          response.body.results[0].run_3.should.equal('90');
+          response.body.results[0].run_3.should.equal('0');
           response.body.results[0].should.have.property('final');
-          response.body.results[0].final.should.equal('1');
+          response.body.results[0].final.should.equal('00');
           done();
         });
     });
