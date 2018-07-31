@@ -47,9 +47,7 @@ const checkAuth = (request, response, next) => {
 io.on('connection', (client) => {
   client.on('subscribeToChange', (change) => {
     console.log('client is subscribing to leaderboard with change ', change);
-    // setInterval(() => {
     io.emit('change', change);
-    // }, interval);
   });
 });
 
