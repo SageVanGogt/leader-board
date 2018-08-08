@@ -352,6 +352,37 @@ app.get('/api/v1/media', checkAuth, (request, response) => {
     });
 });
 
+app.post('/api/v1/events', (request, response) => {
+  const {
+    name,
+    year,
+    location } = request.body;
+
+  let result = ['name', 'year', 'location']
+    .every(prop => request.body.hasOwnProperty(prop));
+
+  if (result) {
+    database('events').insert({
+      name,
+      year,
+      location
+    }, 'id')
+      .then(resultId => {
+        response.status(201).json({
+          status: 'Success! Your event has been added.',
+          resultId: resultId[0]
+        });
+      })
+      .catch(error => {
+        response.status(500).json({ error });
+      });
+  } else {
+    response.status(422).json({
+      message: 'Please include all of the necessary properties in the request body'
+    });
+  }
+});
+
 server.listen(app.get('port'), () => {
   console.log(`Express intro running on localhost: ${app.get('port')}`);
 });
