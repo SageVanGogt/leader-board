@@ -383,6 +383,39 @@ app.post('/api/v1/events', (request, response) => {
   }
 });
 
+app.post('/api/v1/riders', (request, response) => {
+  const {
+    name,
+    gender,
+    img,
+    country } = request.body;
+
+  let result = ['name', 'gender', 'img', 'country']
+    .every(prop => request.body.hasOwnProperty(prop));
+
+  if (result) {
+    database('riders').insert({
+      name,
+      gender,
+      img,
+      country
+    }, 'id')
+      .then(riderId => {
+        response.status(201).json({
+          status: 'Success! Your rider has been added.',
+          riderId: riderId[0]
+        });
+      })
+      .catch(error => {
+        response.status(500).json({ error });
+      });
+  } else {
+    response.status(422).json({
+      message: 'Please include all of the necessary properties in the request body'
+    });
+  }
+});
+
 server.listen(app.get('port'), () => {
   console.log(`Express intro running on localhost: ${app.get('port')}`);
 });
