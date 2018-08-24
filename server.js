@@ -184,6 +184,25 @@ app.get('/api/v1/events/:eventId/division/:divId/results', (request, response) =
     });
 });
 
+app.get('/api/v1/events/:eventId/divisions', (request, response) => {
+  const { eventId } = request.params;
+  return database('divisions').where({
+    event_id: eventId
+  }).select()
+    .then(divisions => {
+      return response.status(200).json({
+        status: 'success',
+        divisions
+      });
+    })
+    .catch(error => {
+      response.status(500).json({
+        message: "event not found",
+        error
+      });
+    });
+});
+
 app.post('/api/v1/results', checkAdmin, (request, response) => {
   const {
     event_id,
