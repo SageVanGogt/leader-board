@@ -22,6 +22,7 @@ exports.up = function (knex, Promise) {
       table.integer('event_id').unsigned();
       table.foreign('event_id')
         .references('events.id');
+      table.integer('rounds').unsigned();
     }),
     knex.schema.createTable('results', function (table) {
       table.increments('id');
