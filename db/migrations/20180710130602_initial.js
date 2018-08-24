@@ -19,6 +19,9 @@ exports.up = function (knex, Promise) {
       table.string('title');
       table.string('gender');
       table.string('sport');
+      table.integer('event_id').unsigned();
+      table.foreign('event_id')
+        .references('events.id');
     }),
     knex.schema.createTable('results', function (table) {
       table.increments('id');
