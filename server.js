@@ -184,6 +184,27 @@ app.get('/api/v1/events/:eventId/division/:divId/results', (request, response) =
     });
 });
 
+app.get('/api/v1/events/:eventId/division/:divId/results/:roundId', (request, response) => {
+  const { eventId, divId, roundId } = request.params;
+  return database('results').where({
+    event_id: eventId,
+    division_id: divId,
+    round: roundId
+  }).select()
+    .then(results => {
+      return response.status(200).json({
+        status: 'success',
+        results
+      });
+    })
+    .catch(error => {
+      response.status(500).json({
+        message: "results not found",
+        error
+      });
+    });
+});
+
 app.get('/api/v1/events/:eventId/divisions', (request, response) => {
   const { eventId } = request.params;
   return database('divisions').where({
