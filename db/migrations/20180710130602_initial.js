@@ -19,6 +19,10 @@ exports.up = function (knex, Promise) {
       table.string('title');
       table.string('gender');
       table.string('sport');
+      table.integer('event_id').unsigned();
+      table.foreign('event_id')
+        .references('events.id');
+      table.integer('rounds').unsigned();
     }),
     knex.schema.createTable('results', function (table) {
       table.increments('id');
@@ -38,6 +42,7 @@ exports.up = function (knex, Promise) {
       table.string('run_3');
       table.string('run_3_media');
       table.string('final');
+      table.integer('round').unsigned();
     }),
     knex.schema.createTable('media', function (table) {
       table.increments('id');
