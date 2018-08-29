@@ -456,6 +456,41 @@ app.post('/api/v1/riders', (request, response) => {
   }
 });
 
+app.post('/api/v1/divisions', (request, response) => {
+  const {
+    gender,
+    title,
+    sport,
+    event,
+    rounds } = request.body;
+
+  let result = ['gender', 'title', 'sport', 'event', 'rounds']
+    .every(prop => request.body.hasOwnProperty(prop));
+
+  if (result) {
+    database('divisions').insert({
+      gender,
+      title,
+      sport,
+      event_id: event,
+      rounds
+    }, 'id')
+      .then(divisionId => {
+        response.status(201).json({
+          status: 'Success! Your division has been added.',
+          divisionId: divisionId[0]
+        });
+      })
+      .catch(error => {
+        response.status(500).json({ error });
+      });
+  } else {
+    response.status(422).json({
+      message: 'Please include all of the necessary properties in the request body'
+    });
+  }
+});
+
 server.listen(app.get('port'), () => {
   console.log(`Express intro running on localhost: ${app.get('port')}`);
 });
