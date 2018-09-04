@@ -224,7 +224,7 @@ app.get('/api/v1/events/:eventId/divisions', (request, response) => {
     });
 });
 
-app.post('/api/v1/results', checkAdmin, (request, response) => {
+app.post('/api/v1/results', (request, response) => {
   const {
     event_id,
     division_id,
