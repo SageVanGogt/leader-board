@@ -455,7 +455,7 @@ app.post('/api/v1/divisions', (request, response) => {
     gender,
     title,
     sport,
-    event,
+    event_id,
     rounds } = request.body;
 
   let result = ['gender', 'title', 'sport', 'event', 'rounds']
@@ -466,7 +466,7 @@ app.post('/api/v1/divisions', (request, response) => {
       gender,
       title,
       sport,
-      event_id: event,
+      event_id,
       rounds
     }, 'id')
       .then(divisionId => {
