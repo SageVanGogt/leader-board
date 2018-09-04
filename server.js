@@ -229,10 +229,7 @@ app.post('/api/v1/results', checkAdmin, (request, response) => {
     event_id,
     division_id,
     rider_id,
-    run_1,
-    run_2,
-    run_3,
-    final } = request.body;
+    round } = request.body;
 
   let result = ['event_id', 'division_id', 'rider_id']
     .every(prop => request.body.hasOwnProperty(prop));
@@ -242,10 +239,7 @@ app.post('/api/v1/results', checkAdmin, (request, response) => {
       event_id,
       division_id,
       rider_id,
-      run_1,
-      run_2,
-      run_3,
-      final
+      round
     }, 'id')
       .then(resultId => {
         response.status(201).json({ 
