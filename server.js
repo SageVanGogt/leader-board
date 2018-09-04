@@ -458,7 +458,7 @@ app.post('/api/v1/divisions', (request, response) => {
     event_id,
     rounds } = request.body;
 
-  let result = ['gender', 'title', 'sport', 'event', 'rounds']
+  let result = ['gender', 'title', 'sport', 'event_id', 'rounds']
     .every(prop => request.body.hasOwnProperty(prop));
 
   if (result) {
