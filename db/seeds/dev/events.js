@@ -6,7 +6,7 @@ exports.seed = function(knex, Promise) {
       // Inserts seed entries
       return knex('events').insert([
         {
-          id: 1, name: 'Olympics', year: '2018', location: 'PyeongChang'},
+          name: 'Olympics', year: '2018', location: 'PyeongChang'},
       ]);
     });
 };
