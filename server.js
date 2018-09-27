@@ -338,11 +338,11 @@ app.patch('/api/v1/results/:id', checkAdmin, (request, response) => {
     });
 });
 
-app.patch('/api/v1/events/:eventId/divisions/:divisionId/riders/:riderId', (request, response) => {
-  const {eventId, divisionId, riderId} = request.params;
+app.patch('/api/v1/events/:eventId/divisions/:divisionId/riders/:riderId/round/:roundId', (request, response) => {
+  const {eventId, divisionId, riderId, roundId} = request.params;
   const updatedResult = request.body.result;
   return database('results')
-    .where({ event_id: eventId, division_id: divisionId, rider_id: riderId })
+    .where({ event_id: eventId, division_id: divisionId, rider_id: riderId, round: roundId })
     .update(updatedResult)
     .then(() => {
       response.status(203).json({
